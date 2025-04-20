@@ -1,0 +1,6 @@
+{
+  "useSysTempAsFallback": true,
+  "logInfo": {
+    "logLevel": "TRACE"
+  }
+}

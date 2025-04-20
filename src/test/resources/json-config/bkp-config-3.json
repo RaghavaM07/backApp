@@ -1,0 +1,6 @@
+{
+  "name": "Test Backup 3",
+  "fromLocation": "/home/raghava/importantFiles/",
+  "toLocation": true,
+  "compression": "SOME_INVALID_STRING"
+}

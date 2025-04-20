@@ -1,0 +1,8 @@
+{
+  "backupConfigFileLocation": "/home/raghava/backups/",
+  "useSysTempAsFallback": false,
+  "logInfo": {
+    "logLevel": "INFO",
+    "logFileLocation": "/var/logs/backApp.log"
+  }
+}

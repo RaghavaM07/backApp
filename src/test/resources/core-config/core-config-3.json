@@ -1,0 +1,7 @@
+{
+  "backupConfigFileLocation": 555,
+  "useSysTempAsFallback": -5,
+  "logInfo": {
+    "logFileLocation": "/var/logs/backApp.log"
+  }
+}
