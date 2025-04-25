@@ -6,13 +6,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BackupConfig extends BaseConfig {
+public class BackupConfig extends BaseConfig implements Comparable<BackupConfig> {
     private String name;
     private String fromLocation;
     private String toLocation = Constants.DEFAULT_BACKUP_DIR;
@@ -24,5 +25,10 @@ public class BackupConfig extends BaseConfig {
 
     public Date nextTime() {
         return interval.after(lastTime);
+    }
+
+    @Override
+    public int compareTo(BackupConfig other) {
+        return (int) Duration.between(this.nextTime().toInstant(), other.nextTime().toInstant()).toMillis();
     }
 }

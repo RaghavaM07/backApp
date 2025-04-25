@@ -67,4 +67,8 @@ public class BackupInterval {
     public static BackupInterval ofMinutes(int minutes) {
         return new BackupInterval(0, 0, 0, minutes);
     }
+
+    public long toMillis() {
+        return 2_629_746_000L*months + 86_400_000L*days + 3_600_000L*hours + 60_000L*minutes;
+    }
 }

@@ -21,7 +21,7 @@ public class JsonConfigLoaderTest {
         BackupConfig backupConfig = new BackupConfig();
 
         try {
-            JsonConfigLoader loader = new JsonConfigLoader("/json-config/bkp-config-1.json");
+            JsonConfigLoader loader = new JsonConfigLoader("src/test/resources/json-config/bkp-config-1.json");
             backupConfig = loader.load();
         } catch (Exception e) {
             System.out.println("Caught exception: "+ e.getClass() + " - " + e.getMessage());
@@ -48,7 +48,7 @@ public class JsonConfigLoaderTest {
         BackupConfig backupConfig = new BackupConfig();
 
         try {
-            JsonConfigLoader loader = new JsonConfigLoader("/json-config/bkp-config-2.json");
+            JsonConfigLoader loader = new JsonConfigLoader("src/test/resources/json-config/bkp-config-2.json");
             backupConfig = loader.load();
         } catch (Exception e) {
             System.out.println("Caught exception: "+ e.getClass() + " - " + e.getMessage());
@@ -68,7 +68,7 @@ public class JsonConfigLoaderTest {
     void throwsException() {
         AtomicReference<BackupConfig> bkpConfig = new AtomicReference<>(new BackupConfig());
         assertThrows(InvalidFormatException.class, () -> {
-            JsonConfigLoader loader = new JsonConfigLoader("/json-config/bkp-config-3.json");
+            JsonConfigLoader loader = new JsonConfigLoader("src/test/resources/json-config/bkp-config-3.json");
             bkpConfig.set(loader.load());
         });
     }

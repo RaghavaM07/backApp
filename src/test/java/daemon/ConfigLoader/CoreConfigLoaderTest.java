@@ -2,6 +2,7 @@ package daemon.ConfigLoader;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import daemon.Config.CoreConfig;
+import daemon.Constants;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicReference;
@@ -14,7 +15,7 @@ public class CoreConfigLoaderTest {
     void loadsGoodFile() {
         CoreConfig coreConfig = new CoreConfig();
         try {
-            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("/core-config/core-config-1.json");
+            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("src/test/resources/core-config/core-config-1.json");
             coreConfig = coreConfigLoader.load();
         } catch (Exception e) {
             System.out.println("Caught exception: "+ e.getClass() + " - " + e.getMessage());
@@ -22,31 +23,32 @@ public class CoreConfigLoaderTest {
 
         assertEquals("/home/raghava/backups/", coreConfig.getBackupConfigFileLocation());
         assertFalse(coreConfig.isUseSysTempAsFallback());
-        assertEquals("INFO", coreConfig.getLogInfo().getLogLevel());
-        assertEquals("/var/logs/backApp.log", coreConfig.getLogInfo().getLogFileLocation());
+        assertEquals("INFO", coreConfig.getLogging().getLogLevel());
+        assertEquals("/var/logs/backApp.log", coreConfig.getLogging().getLogFileLocation());
     }
 
     @Test
     void loadsDefaultValues() {
         CoreConfig coreConfig = new CoreConfig();
         try {
-            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("/core-config/core-config-2.json");
+            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("src/test/resources/core-config/core-config-2.json");
             coreConfig = coreConfigLoader.load();
         } catch (Exception e) {
             System.out.println("Caught exception: " + e.getMessage());
         }
 
-        assertEquals(System.getProperty("user.home") + "/backApp-Backups/backups/", coreConfig.getBackupConfigFileLocation());
+        assertEquals(Constants.DEFAULT_BACKUP_CONFIG_DIR, coreConfig.getBackupConfigFileLocation());
         assertTrue(coreConfig.isUseSysTempAsFallback());
-        assertEquals("TRACE", coreConfig.getLogInfo().getLogLevel());
-        assertEquals(System.getProperty("user.home") + "/backApp-Backups/backApp.log", coreConfig.getLogInfo().getLogFileLocation());
+        assertEquals("TRACE", coreConfig.getLogging().getLogLevel());
+        assertEquals(System.getProperty("user.home") + "/backApp-Backups/backApp.log", coreConfig.getLogging().getLogFileLocation());
+        assertEquals(Constants.DEFAULT_MAX_THREADS, coreConfig.getMaxThreads());
     }
 
     @Test
     void throwsException() {
         AtomicReference<CoreConfig> coreConfig = new AtomicReference<>(new CoreConfig());
         assertThrows(InvalidFormatException.class, () -> {
-            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("/core-config/core-config-3.json");
+            CoreConfigLoader coreConfigLoader = new CoreConfigLoader("src/test/resources/core-config/core-config-3.json");
             coreConfig.set(coreConfigLoader.load());
         });
     }

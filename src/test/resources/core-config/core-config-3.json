@@ -1,7 +1,8 @@
 {
   "backupConfigFileLocation": 555,
   "useSysTempAsFallback": -5,
-  "logInfo": {
+  "logging": {
     "logFileLocation": "/var/logs/backApp.log"
-  }
+  },
+  "maxThreads": 1
 }

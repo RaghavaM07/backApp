@@ -1,8 +1,9 @@
 {
   "backupConfigFileLocation": "/home/raghava/backups/",
   "useSysTempAsFallback": false,
-  "logInfo": {
+  "logging": {
     "logLevel": "INFO",
     "logFileLocation": "/var/logs/backApp.log"
-  }
+  },
+  "maxThreads": 4
 }

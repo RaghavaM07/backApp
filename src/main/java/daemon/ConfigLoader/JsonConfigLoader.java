@@ -16,8 +16,10 @@ public class JsonConfigLoader implements IConfigLoader{
     public JsonConfigLoader(String configFile) throws Exception {
         if(!configFile.endsWith(".json")) throw new Exception(configFile + " does not end with `.json` extension!");
 
-        InputStream inJson = BackupConfig.class.getResourceAsStream(configFile);
-        if (inJson == null) throw new Exception(configFile + " does not exist!");
+        File f = new File(configFile);
+        if(!f.exists() || f.isDirectory()) {
+            throw new Exception(configFile + " does not exist!");
+        }
 
         this.configFile = configFile;
     }
@@ -25,10 +27,8 @@ public class JsonConfigLoader implements IConfigLoader{
     @Override
     public BackupConfig load() throws IOException {
         ObjectMapper objectMapper = MakeObjectMapper.makeNew();
-        InputStream inJson = BackupConfig.class.getResourceAsStream(configFile);
+        File jsonFile = new File(configFile);
 
-        if (inJson == null)  throw new IOException("Resource not found: " + configFile);
-
-        return objectMapper.readValue(inJson, new TypeReference<BackupConfig>() {});
+        return objectMapper.readValue(jsonFile, BackupConfig.class);
     }
 }
