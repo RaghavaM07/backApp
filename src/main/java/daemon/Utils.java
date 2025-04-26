@@ -2,12 +2,13 @@ package daemon;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import logger.LoggerUtil;
 
 import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class Utils {
-    private static final Logger logger = Logger.getLogger(Utils.class.getCanonicalName());
+    private static final Logger logger = LoggerUtil.getLogger(Utils.class);
 
     public static ObjectMapper makeNew() {
         logger.fine("Making new object mapper");
@@ -23,6 +24,5 @@ public class Utils {
         logger.severe(e.getMessage());
         logger.severe("===========================================");
         logger.severe(Arrays.toString(e.getStackTrace()));
-        System.exit(1);
     }
 }

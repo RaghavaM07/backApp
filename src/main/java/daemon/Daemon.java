@@ -3,8 +3,8 @@ package daemon;
 import daemon.Backup.BackupTaskMgr;
 import daemon.Config.BackupConfig;
 import daemon.Config.CoreConfig;
-import daemon.ConfigLoader.CoreConfigLoader;
 import daemon.ConfigLoader.JsonConfigLoader;
+import logger.LoggerUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 
 public class Daemon implements Runnable{
-    private static final Logger logger = Logger.getLogger(Daemon.class.getCanonicalName());
+    private static final Logger logger = LoggerUtil.getLogger(Daemon.class);
     private final CoreConfig coreConfig;
 
     public Daemon(CoreConfig coreConfig) {
@@ -93,8 +93,6 @@ public class Daemon implements Runnable{
     private boolean isFileSupported(String s) {
         return Arrays.stream(supportedExtns).anyMatch(s::endsWith);
     }
-
-
 
     // for debug
     private void printAllConstants() {

@@ -3,13 +3,14 @@ package daemon.ConfigLoader;
 import daemon.Config.BackupConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import daemon.Utils;
+import logger.LoggerUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
 public class JsonConfigLoader implements IConfigLoader{
-    private static final Logger logger = Logger.getLogger(JsonConfigLoader.class.getCanonicalName());
+    private static final Logger logger = LoggerUtil.getLogger(JsonConfigLoader.class);
     private final String configFile;
 
     public JsonConfigLoader(String configFile) throws Exception {
@@ -29,7 +30,7 @@ public class JsonConfigLoader implements IConfigLoader{
 
     @Override
     public BackupConfig load() throws IOException {
-        logger.fine("Loading CORE config from: " + configFile);
+        logger.fine("Loading config from: " + configFile);
         ObjectMapper objectMapper = Utils.makeNew();
         File jsonFile = new File(configFile);
 

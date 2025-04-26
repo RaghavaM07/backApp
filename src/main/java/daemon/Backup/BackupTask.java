@@ -1,12 +1,13 @@
 package daemon.Backup;
 
 import daemon.Config.BackupConfig;
+import logger.LoggerUtil;
 
 import java.util.logging.Logger;
 
 
 public class BackupTask implements Runnable {
-    private static final Logger logger = Logger.getLogger(BackupTask.class.getCanonicalName());
+    private static final Logger logger = LoggerUtil.getLogger(BackupTask.class);
     private final BackupConfig config;
 
     public BackupTask(BackupConfig config) {

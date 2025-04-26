@@ -2,12 +2,13 @@ package daemon.Backup;
 
 import daemon.Config.BackupConfig;
 import daemon.Config.CoreConfig;
+import logger.LoggerUtil;
 
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 public class BackupTaskMgr {
-    private static final Logger logger = Logger.getLogger(BackupTaskMgr.class.getCanonicalName());
+    private static final Logger logger = LoggerUtil.getLogger(BackupTaskMgr.class);
     private static BackupTaskMgr instance = null;
     private final ScheduledExecutorService scheduler;
     private final ConcurrentHashMap<BackupConfig, ScheduledFuture<?>> taskHandlerMap;
