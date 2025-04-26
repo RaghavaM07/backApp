@@ -1,23 +1,26 @@
 package daemon.ConfigLoader;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import daemon.Config.BackupConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import daemon.Config.CoreConfig;
-import daemon.MakeObjectMapper;
+import daemon.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.logging.Logger;
 
 public class JsonConfigLoader implements IConfigLoader{
+    private static final Logger logger = Logger.getLogger(JsonConfigLoader.class.getCanonicalName());
     private final String configFile;
 
     public JsonConfigLoader(String configFile) throws Exception {
-        if(!configFile.endsWith(".json")) throw new Exception(configFile + " does not end with `.json` extension!");
+        if(!configFile.endsWith(".json")) {
+            logger.severe(configFile + " is not a .json file");
+            throw new Exception(configFile + " does not end with `.json` extension!");
+        }
 
         File f = new File(configFile);
         if(!f.exists() || f.isDirectory()) {
+            logger.severe(configFile + " DNE/is a directory");
             throw new Exception(configFile + " does not exist!");
         }
 
@@ -26,7 +29,8 @@ public class JsonConfigLoader implements IConfigLoader{
 
     @Override
     public BackupConfig load() throws IOException {
-        ObjectMapper objectMapper = MakeObjectMapper.makeNew();
+        logger.fine("Loading CORE config from: " + configFile);
+        ObjectMapper objectMapper = Utils.makeNew();
         File jsonFile = new File(configFile);
 
         return objectMapper.readValue(jsonFile, BackupConfig.class);

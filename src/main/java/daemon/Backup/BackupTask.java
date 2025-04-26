@@ -2,9 +2,12 @@ package daemon.Backup;
 
 import daemon.Config.BackupConfig;
 
+import java.util.logging.Logger;
+
 
 public class BackupTask implements Runnable {
-    private BackupConfig config;
+    private static final Logger logger = Logger.getLogger(BackupTask.class.getCanonicalName());
+    private final BackupConfig config;
 
     public BackupTask(BackupConfig config) {
         this.config = config;
@@ -12,12 +15,12 @@ public class BackupTask implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Starting task: " + config.getName());
+        logger.info("Starting task: " + config.getName());
 
         // TODO: Implement backup here
         try {
             Thread.sleep(5_000);
-            System.out.println("Done task: " + config.getName());
+            logger.info("Done task: " + config.getName());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
