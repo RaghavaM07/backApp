@@ -41,6 +41,7 @@ public class BackupTaskMgr {
     public void cancelTask(BackupConfig config) {
         logger.warning("Cancelling task: " + config);
         taskHandlerMap.get(config).cancel(true);
+        taskHandlerMap.remove(config);
     }
 
     public void shutdownScheduler() {

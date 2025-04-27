@@ -27,7 +27,7 @@ public class CoreConfigLoader implements IConfigLoader {
 
     @Override
     public CoreConfig load() throws IOException {
-        ObjectMapper objectMapper = Utils.makeNew();
+        ObjectMapper objectMapper = Utils.makeNewObjectMapper();
         File jsonFile = new File(configFile);
 
         return objectMapper.readValue(jsonFile, CoreConfig.class);

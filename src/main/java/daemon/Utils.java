@@ -9,8 +9,9 @@ import java.util.logging.Logger;
 
 public class Utils {
     private static final Logger logger = LoggerUtil.getLogger(Utils.class);
+    private static final String[] supportedExtns = {".json"};
 
-    public static ObjectMapper makeNew() {
+    public static ObjectMapper makeNewObjectMapper() {
         logger.fine("Making new object mapper");
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.disable(MapperFeature.ALLOW_COERCION_OF_SCALARS);
@@ -24,5 +25,9 @@ public class Utils {
         logger.severe(e.getMessage());
         logger.severe("===========================================");
         logger.severe(Arrays.toString(e.getStackTrace()));
+    }
+
+    public static boolean isFileSupported(String s) {
+        return Arrays.stream(supportedExtns).anyMatch(s::endsWith);
     }
 }

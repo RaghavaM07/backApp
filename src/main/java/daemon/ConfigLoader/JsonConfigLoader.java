@@ -31,7 +31,7 @@ public class JsonConfigLoader implements IConfigLoader{
     @Override
     public BackupConfig load() throws IOException {
         logger.fine("Loading config from: " + configFile);
-        ObjectMapper objectMapper = Utils.makeNew();
+        ObjectMapper objectMapper = Utils.makeNewObjectMapper();
         File jsonFile = new File(configFile);
 
         return objectMapper.readValue(jsonFile, BackupConfig.class);

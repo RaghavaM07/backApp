@@ -57,7 +57,7 @@ public class Daemon implements Runnable{
             logger.info("Backup config directory exists.... Performing initial scan");
             try {
                 Stream<String> backupConfigFiles = Files.walk(backupConfigFolder)
-                        .filter(p -> Files.isRegularFile(p) && isFileSupported(p.getFileName().toString()))
+                        .filter(p -> Files.isRegularFile(p) && Utils.isFileSupported(p.getFileName().toString()))
                         .map(p -> String.valueOf(p.toAbsolutePath()));
                 backupConfigFiles.forEach(file -> {
                     try {
@@ -73,7 +73,12 @@ public class Daemon implements Runnable{
         }
 
         // spawn FileWatcher Thread
-        // TODO: FileWatcher (uses WatchService)
+        try {
+            new Thread(new FileWatcher(coreConfig.getBackupConfigFileLocation(), backupCfgFileObjMap), "FileWatcher").start();
+        } catch (Exception e) {
+            logger.severe("Failed to spawn FileWatcher thread");
+            Utils.errorHandler(e);
+        }
 
         for(BackupConfig config: backupCfgFileObjMap.values()) {
             logger.info("Scheduling task: " + config.getName());
@@ -87,11 +92,9 @@ public class Daemon implements Runnable{
         } catch (InterruptedException e) {
             Utils.errorHandler(e);
         }
-    }
 
-    private final String[] supportedExtns = {".json"};
-    private boolean isFileSupported(String s) {
-        return Arrays.stream(supportedExtns).anyMatch(s::endsWith);
+        taskMgr.shutdownScheduler();
+        logger.warning("Exiting Daemon");
     }
 
     // for debug
