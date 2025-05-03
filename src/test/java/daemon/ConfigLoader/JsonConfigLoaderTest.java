@@ -65,7 +65,7 @@ public class JsonConfigLoaderTest {
     }
 
     @Test
-    void throwsException() {
+    void throwsExceptionForInvalidValues() {
         AtomicReference<BackupConfig> bkpConfig = new AtomicReference<>(new BackupConfig());
         assertThrows(InvalidFormatException.class, () -> {
             JsonConfigLoader loader = new JsonConfigLoader("src/test/resources/json-config/bkp-config-3.json");

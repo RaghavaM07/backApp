@@ -45,7 +45,7 @@ public class CoreConfigLoaderTest {
     }
 
     @Test
-    void throwsException() {
+    void throwsExceptionForInvalidValues() {
         AtomicReference<CoreConfig> coreConfig = new AtomicReference<>(new CoreConfig());
         assertThrows(InvalidFormatException.class, () -> {
             CoreConfigLoader coreConfigLoader = new CoreConfigLoader("src/test/resources/core-config/core-config-3.json");
