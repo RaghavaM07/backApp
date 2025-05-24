@@ -71,4 +71,16 @@ public class BackupInterval {
     public long toMillis() {
         return 2_629_746_000L*months + 86_400_000L*days + 3_600_000L*hours + 60_000L*minutes;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        if(months > 0) str.append(months).append("M");
+        if(days > 0) str.append(days).append("d");
+        if(hours > 0) str.append(hours).append("h");
+        if(minutes > 0) str.append(minutes).append("m");
+
+        return str.toString();
+    }
 }
