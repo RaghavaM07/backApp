@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -22,6 +21,7 @@ public class BackupConfig extends BaseConfig implements Comparable<BackupConfig>
     private Date lastTime = null;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private CompressionType compression = CompressionType.NONE;
+    private short maxRetention = Constants.DEFAULT_MAX_BACKUPS_PER_TASK;
 
     public Date nextTime() {
         return interval.after(lastTime);

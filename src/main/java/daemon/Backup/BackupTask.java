@@ -28,11 +28,13 @@ public class BackupTask implements Runnable {
     public void run() {
         logger.info("Starting task: " + config.getName());
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy-hh:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy-hhmmss");
         String date = simpleDateFormat.format(new Date());
 
         Path fromPath = new File(config.getFromLocation()).toPath();
-        Path toPath = new File(config.getToLocation() + "-bkp-" + date).toPath();
+        String sourceName = fromPath.getFileName().toString();
+        String destName = sourceName + String.format("-%s.bkp", date);
+        Path toPath = new File(config.getToLocation()).toPath().resolve(destName);
         ICopier copier = null;
 
         if(Files.isRegularFile(fromPath)) copier = new FileCopier(fromPath, toPath);
@@ -41,6 +43,8 @@ public class BackupTask implements Runnable {
         try {
             copier.backup();
             logger.info("Done task: " + config.getName());
+            logger.info("Enforcing maxRetention copies = " + config.getMaxRetention());
+            // TODO: implement old backup cleanup
         } catch (IOException e) {
             Utils.errorHandler(e);
         }
