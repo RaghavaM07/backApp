@@ -1,15 +1,11 @@
 package daemon.Backup;
 
 import daemon.Config.BackupConfig;
-import daemon.Utils;
 import logger.LoggerUtil;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -22,8 +18,26 @@ public class BackupTask implements Runnable {
         this.config = config;
     }
 
+    // When daemon restarts, we don't want to re-run a task that need not be run again at this time
+    private boolean shouldRun() {
+        boolean retVal = config.getLastTime() == null ||
+                System.currentTimeMillis()-config.getLastTime().getTime() >= config.getInterval().toMillis();
+
+        if(!retVal) {
+            logger.warning(String.format("%s was last run at %s, next run expected at %s",
+                    config.getName(),
+                    config.getLastTime(),
+                    new Date(config.getLastTime().getTime() + config.getInterval().toMillis())
+            ));
+        }
+
+        return retVal;
+    }
+
     @Override
     public void run() {
+        if(!shouldRun()) return;
+
         logger.info("Starting task: " + config.getName());
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyy-hhmmss");
