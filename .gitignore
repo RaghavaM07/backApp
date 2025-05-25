@@ -36,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Test Outputs ###
+src/test/resources/copy-files/toDir
+src/test/resources/copy-folders/toDir
