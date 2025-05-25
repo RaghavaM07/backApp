@@ -36,7 +36,8 @@ public class Discoverer extends SimpleFileVisitor<Path> {
     }
 
     private Path computeDest(Path current) {
-        return destBase.resolve(srcBase.relativize(current));
+        Path relativePath = srcBase.relativize(current);
+        return destBase.resolve(srcBase.getFileName()).resolve(relativePath);
     }
 
     @Override

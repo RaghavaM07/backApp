@@ -48,15 +48,18 @@ public class BackupTask implements Runnable {
 
         logger.info("Starting task: " + config.getName());
 
+        // discover folders and files
         Discoverer discoverer = getDiscoverer();
         BaseNode root;
         try {
             root = discoverer.discover();
         } catch (IOException e) {
-            Utils.errorHandler(e);
+            throw new RuntimeException(e);
         }
 
-        // TODO: copy files
+        // copy files
+        TreeCopier.copyTree(root);
+
         // TODO: verify copied files' checksums
         // TODO: compress backup
         logger.info("Done task: " + config.getName());
