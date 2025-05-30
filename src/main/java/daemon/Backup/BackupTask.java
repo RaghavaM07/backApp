@@ -1,8 +1,8 @@
 package daemon.Backup;
 
 import daemon.Backup.FileTree.BaseNode;
+import daemon.Backup.FileTree.FileNode;
 import daemon.Config.BackupConfig;
-import daemon.Utils;
 import logger.LoggerUtil;
 
 import java.io.File;
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -60,7 +61,24 @@ public class BackupTask implements Runnable {
         // copy files
         TreeCopier.copyTree(root);
 
-        // TODO: verify copied files' checksums
+        // verify copied files' checksums
+        ChecksumVerifier verifier = new ChecksumVerifier(root);
+        List<FileNode> unmatched = verifier.verifyTree();
+        if(!unmatched.isEmpty()) {
+            // Some files didn't copy correctly, copy them once again
+            for (FileNode node: unmatched) {
+                // Check if file might have been removed
+                if(!(new File(node.getSrcName().toString()).exists())) {
+                    logger.warning(node.getSrcName() + " does not exist anymore, skipping");
+                    continue;
+                }
+                // if file exists, we should be ideally able to re-copy it
+                logger.warning("Copying " + node.getSrcName() + " again to " + node.getDestName());
+                TreeCopier.copyTree(node);
+                if(!(new ChecksumVerifier(node).verifyTree()).isEmpty()) logger.severe("Re-copy failed for " + node.getSrcName() + ", continuing");
+            }
+        }
+
         // TODO: compress backup
         logger.info("Done task: " + config.getName());
         logger.info("Enforcing maxRetention copies = " + config.getMaxRetention());

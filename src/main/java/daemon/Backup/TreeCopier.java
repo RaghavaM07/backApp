@@ -2,7 +2,6 @@ package daemon.Backup;
 
 import daemon.Backup.FileTree.BaseNode;
 import daemon.Backup.FileTree.FolderNode;
-import daemon.Utils;
 import logger.LoggerUtil;
 
 import java.io.IOException;
@@ -41,10 +40,10 @@ public class TreeCopier {
             // copy root first
             try {
                 if (root instanceof FolderNode) {
-                    logger.info("Creating directory: " + dest);
+                    logger.fine("Creating directory: " + dest);
                     Files.createDirectories(dest);
                 } else {
-                    logger.info("Copying file: " + src + " -> " + dest);
+                    logger.fine("Copying file: " + src + " -> " + dest);
                     Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
                 }
             } catch (IOException e) {
