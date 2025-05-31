@@ -30,8 +30,21 @@ public class CompressorFactory {
             }
         }
     }
-
     public static Compressor getCompressor(CompressionType compressionType, Path input, Path output) {
         return getCompressor(compressionType, input.toFile(), output.toFile());
+    }
+
+    public static String getArchiveExtension(CompressionType compressionType) {
+        switch (compressionType) {
+            case GZIP -> {
+                return ".tar.gz";
+            }
+            case ZIP -> {
+                return ".zip";
+            }
+            case null, default -> {
+                return "";
+            }
+        }
     }
 }

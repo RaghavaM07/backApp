@@ -2,13 +2,18 @@ package daemon.Backup;
 
 import daemon.Backup.Compression.Compressor;
 import daemon.Backup.Compression.CompressorFactory;
+import daemon.Backup.Compression.NoCompressor;
 import daemon.Backup.FileTree.BaseNode;
 import daemon.Backup.FileTree.FileNode;
 import daemon.Config.BackupConfig;
+import daemon.Config.CompressionType;
+import daemon.Utils;
 import logger.LoggerUtil;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -82,22 +87,19 @@ public class BackupTask implements Runnable {
         }
 
         // compress backup
-        String archiveExtension;
-        switch (config.getCompression()) {
-            case GZIP -> {
-                archiveExtension = ".tar.gz";
-                break;
-            }
-            case ZIP -> {
-                archiveExtension = ".zip";
-                break;
-            }
-            case null, default -> archiveExtension = "";
-        }
+        String archiveExtension = CompressorFactory.getArchiveExtension(config.getCompression());
         String archiveLocation = root.getDestName().toFile().getAbsolutePath() + archiveExtension;
         Compressor compressor = CompressorFactory.getCompressor(config.getCompression(), root.getDestName(), Path.of(archiveLocation));
         compressor.compress();
         logger.info("Compression phase output for " + config.getName() + " at " + archiveLocation);
+        if(!(compressor instanceof NoCompressor)){
+            logger.info("Removing original file post compression " + root.getDestName());
+            try {
+                FileUtils.deleteDirectory(root.getDestName().toFile());
+            } catch (IOException e) {
+                Utils.errorHandler(e);
+            }
+        }
 
         logger.info("Enforcing maxRetention copies = " + config.getMaxRetention());
         // TODO: implement old backup cleanup
