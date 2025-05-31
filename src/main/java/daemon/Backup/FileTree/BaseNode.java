@@ -2,7 +2,6 @@ package daemon.Backup.FileTree;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

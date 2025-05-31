@@ -35,7 +35,7 @@ public class GzipCompressor extends Compressor{
             // Recursively add the file/folder to the archive.
             addFileToTarGz(tarOs, input, "");
 
-            System.out.println("Compression complete. Created: " + output);
+            logger.info("Compression complete. Created: " + output);
         } catch (IOException e) {
             Utils.errorHandler(e);
         }

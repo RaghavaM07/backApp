@@ -29,6 +29,7 @@ public class ZipCompressor extends Compressor {
 
             // Start the recursive compression
             _zipFile(input, input.getName(), zos);
+
             logger.info("Compression complete. Created: " + output);
         } catch (IOException e) {
             Utils.errorHandler(e);
