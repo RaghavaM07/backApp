@@ -1,5 +1,7 @@
 package daemon.Backup;
 
+import daemon.Backup.Compression.Compressor;
+import daemon.Backup.Compression.CompressorFactory;
 import daemon.Backup.FileTree.BaseNode;
 import daemon.Backup.FileTree.FileNode;
 import daemon.Config.BackupConfig;
@@ -79,8 +81,24 @@ public class BackupTask implements Runnable {
             }
         }
 
-        // TODO: compress backup
-        logger.info("Done task: " + config.getName());
+        // compress backup
+        String archiveExtension;
+        switch (config.getCompression()) {
+            case GZIP -> {
+                archiveExtension = ".tar.gz";
+                break;
+            }
+            case ZIP -> {
+                archiveExtension = ".zip";
+                break;
+            }
+            case null, default -> archiveExtension = "";
+        }
+        String archiveLocation = root.getDestName().toFile().getAbsolutePath() + archiveExtension;
+        Compressor compressor = CompressorFactory.getCompressor(config.getCompression(), root.getDestName(), Path.of(archiveLocation));
+        compressor.compress();
+        logger.info("Compression phase output for " + config.getName() + " at " + archiveLocation);
+
         logger.info("Enforcing maxRetention copies = " + config.getMaxRetention());
         // TODO: implement old backup cleanup
         // TODO: update backup conf file with lastTime = current time and override file

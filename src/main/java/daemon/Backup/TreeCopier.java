@@ -29,6 +29,7 @@ public class TreeCopier {
             logger.info("Copy complete " + src + " -> " + dest);
         } catch (Exception e) {
             logger.severe("Error during copy from " + src);
+            logger.severe(e.toString());
             throw e;
         }
     }
@@ -43,6 +44,8 @@ public class TreeCopier {
                     logger.fine("Creating directory: " + dest);
                     Files.createDirectories(dest);
                 } else {
+                    // make sure parent folder exists
+                    Files.createDirectories(dest.getParent());
                     logger.fine("Copying file: " + src + " -> " + dest);
                     Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
                 }
