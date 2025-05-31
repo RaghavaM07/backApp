@@ -1,5 +1,6 @@
 package daemon;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import daemon.Backup.BackupTaskMgr;
 import daemon.Config.BackupConfig;
 import daemon.Config.CoreConfig;
@@ -7,6 +8,7 @@ import daemon.ConfigLoader.JsonConfigLoader;
 import logger.LoggerUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -85,16 +87,33 @@ public class Daemon implements Runnable{
             taskMgr.scheduleNewBackup(config);
         }
 
-        logger.info("Running " + taskMgr.getTaskCnt() + " tasks");
+        // shutdown hook to persist changes to config
+        logger.info("Adding shutdown hook");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            logger.warning("Shutdown hook called");
+            ObjectMapper mapper = Utils.makeNewObjectMapper();
+
+            for(Map.Entry<String, BackupConfig> entry: backupCfgFileObjMap.entrySet()) {
+                File file = new File(entry.getKey());
+                try {
+                    mapper.writeValue(file, entry.getValue());
+                } catch (IOException e) {
+                    logger.severe("Could not persist config for " + entry.getValue().getName());
+                    Utils.errorHandler(e);
+                }
+            }
+
+            taskMgr.shutdownScheduler();
+            logger.warning("Exiting Daemon...");
+        }));
+
+        logger.info("Scheduled " + taskMgr.getTaskCnt() + " tasks");
         try {
             logger.fine("Spawning CountDownLatch(1)");
             new CountDownLatch(1).await();
         } catch (InterruptedException e) {
             Utils.errorHandler(e);
         }
-
-        taskMgr.shutdownScheduler();
-        logger.warning("Exiting Daemon");
     }
 
     // for debug

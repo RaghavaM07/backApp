@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -104,7 +105,8 @@ public class BackupTask implements Runnable {
         FolderCleanup cleaner = new FolderCleanup(config.getMaxRetention(), root.getDestName().getParent().getParent().toFile(), root.getSrcName().getFileName().toString());
         cleaner.cleanup();
 
-        // TODO: update backup conf file with lastTime = current time and override file
+        // update backup conf file with lastTime = current time
+        config.setLastTime(Date.from(Instant.now()));
     }
 
     private Discoverer getDiscoverer() {
