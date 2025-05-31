@@ -6,14 +6,12 @@ import daemon.Backup.Compression.NoCompressor;
 import daemon.Backup.FileTree.BaseNode;
 import daemon.Backup.FileTree.FileNode;
 import daemon.Config.BackupConfig;
-import daemon.Config.CompressionType;
 import daemon.Utils;
 import logger.LoggerUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -101,8 +99,11 @@ public class BackupTask implements Runnable {
             }
         }
 
+        // old backup cleanup
         logger.info("Enforcing maxRetention copies = " + config.getMaxRetention());
-        // TODO: implement old backup cleanup
+        FolderCleanup cleaner = new FolderCleanup(config.getMaxRetention(), root.getDestName().getParent().getParent().toFile(), root.getSrcName().getFileName().toString());
+        cleaner.cleanup();
+
         // TODO: update backup conf file with lastTime = current time and override file
     }
 
